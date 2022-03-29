@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 
-function ListingCard({ listing }) {
+function ListingCard({ listing, onDeleteListing }) {
 
   const [favorite, setFavorite] = useState(false);
 
   function handleFavorite() {
     setFavorite(!favorite)
+  }
+
+  function handleDelete() {
+    onDeleteListing(listing.id)
   }
 
   return (
@@ -22,7 +26,11 @@ function ListingCard({ listing }) {
         )}
         <strong>{listing.description}</strong>
         <span> · {listing.location}</span>
-        <button className="emoji-button delete">🗑</button>
+        <button
+          className="emoji-button delete"
+          onClick={handleDelete}
+          >🗑
+        </button>
       </div>
     </li>
   );

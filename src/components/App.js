@@ -12,12 +12,20 @@ function App() {
     .then(listReturn => setListings(listReturn))
   }, [])
 
+  function handleDeleteListing(deletedListingID) {
+    fetch(`http://localhost:6001/listings/${deletedListingID}`, {
+      method: 'DELETE'
+    })
+    .then(r => r.json())
+    .then(d => setListings(listings => listings.filter(l => l.id !== deletedListingID)))
+  }
+
   const filteredList = listings
 
   return (
     <div className="app">
       <Header />
-      <ListingsContainer listings={filteredList} />
+      <ListingsContainer listings={filteredList} onDeleteListing={handleDeleteListing} />
     </div>
   );
 }
