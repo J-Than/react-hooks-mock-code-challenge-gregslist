@@ -5,11 +5,16 @@ import ListingsContainer from "./ListingsContainer";
 function App() {
 
   const [listings, setListings] = useState([])
+  const [searchTerms, setSearchTerms] = useState("")
+  const [filteredList, setFilteredList] = useState([])
 
   useEffect(() => {
     fetch("http://localhost:6001/listings")
     .then(r => r.json())
-    .then(listReturn => setListings(listReturn))
+    .then(listReturn => {
+      setListings(listReturn)
+      setFilteredList(listReturn)
+    })
   }, [])
 
   function handleDeleteListing(deletedListingID) {
@@ -20,11 +25,18 @@ function App() {
     .then(d => setListings(listings => listings.filter(l => l.id !== deletedListingID)))
   }
 
-  const filteredList = listings
+  function handleSearchEntry(entry) {
+    setSearchTerms(searchTerms => searchTerms = entry)
+  }
+
+  function handleSearch() {
+    setFilteredList(filteredList => searchTerms!=="" ?
+      filteredList = listings.filter(l => l.description.includes(searchTerms)) : listings)
+  }
 
   return (
     <div className="app">
-      <Header />
+      <Header searchTerms={searchTerms} onSearchEntry={handleSearchEntry} onSearchSubmit={handleSearch} />
       <ListingsContainer listings={filteredList} onDeleteListing={handleDeleteListing} />
     </div>
   );
